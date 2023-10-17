@@ -28,6 +28,33 @@ class SmbPath:
         for el in dir_list:
             yield Path(str(self / el))
 
+    def mkdir(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
+    def rmdir(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
+    def touch(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
+    def chmod(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
+    def unlink(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
+    def rename(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
+    def replace(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
+    def symlink_to(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
+    def hardlink_to(self):
+        raise NotImplementedError("Function not implemented for SmbPath")
+
 
 class SmbWindowsPath(SmbPath, WindowsPath):
     pass

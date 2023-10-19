@@ -1,5 +1,7 @@
 import smb_path.path_patch
 
+import pytest
+
 from pathlib import Path
 from smb_path.smb_path import SmbPath
 
@@ -38,3 +40,10 @@ def test_smb_path_init_from_path():
 
     assert isinstance(path, SmbPath)
     assert str(path) == "//filshr33.us.evilcorp.com/myShare/myDir/myFile.txt" or str(path) == r"\\filshr33.us.evilcorp.com\myShare\myDir\myFile.txt"
+
+
+def test_not_implemented():
+    path = Path("//filshr33.us.evilcorp.com/myShare/newDir")
+
+    with pytest.raises(NotImplementedError):
+        path.mkdir(parents=False, exist_ok=True)

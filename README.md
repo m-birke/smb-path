@@ -67,16 +67,16 @@ Use `smbclient.ClientConfig` to configure the SMB connection. Eg. `smbclient.Cli
 
 ## Compatibility
 
+`smbprotocol` is platform agnostic since it does not care about the path separator.
+
 Tested with installation into a `python -m venv` virtual environment.
 
-TODO
-
-| OS      | Python | Supported |
-| ------- | ------ | --------- |
-| Windows | 3.11   | ✅        |
-| Windows |        | ❌        |
-| Linux   | 3.11   | ✅        |
-| Linux   |        | ❌        |
+| OS      | Python                    | Supported |
+| ------- | ------------------------- | --------- |
+| Windows | 3.11                      | ✅        |
+| Windows | 3.7, 3.8, 3.9, 3.10, 3.12 | ❓        |
+| Linux   | 3.7, 3.8, 3.9, 3.10, 3.11 | ✅        |
+| Linux   | 3.12                      | ❌        |
 
 ## License
 

@@ -1,5 +1,11 @@
 # `smb-path` Changelog
 
+## 0.3.0 (2023-10-19)
+
+- Support for Python 3.7, 3.8, 3.9, 3.10
+- Bugfix: Make sure that not implemented functions really raise NotImplementedError
+- Setup CI
+
 ## 0.2.0 (2023-10-17)
 
 - Raise not implemented error for functions which would need an alternative implementation with smb protocol

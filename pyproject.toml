@@ -37,9 +37,9 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/unknown/smb-path#readme"
-Issues = "https://github.com/unknown/smb-path/issues"
-Source = "https://github.com/unknown/smb-path"
+Documentation = "https://github.com/m-birke/smb-path#readme"
+Issues = "https://github.com/m-birke/smb-path/issues"
+Source = "https://github.com/m-birke/smb-path"
 
 [tool.hatch.version]
 path = "src/smb_path/__about__.py"

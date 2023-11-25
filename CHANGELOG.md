@@ -1,5 +1,9 @@
 # `smb-path` Changelog
 
+## 0.5.0 (2023--)
+
+- Implement functions mkdir, rmdir, unlink, ...
+
 ## 0.4.0 (2023-10-20)
 
 - Support for Python 3.12

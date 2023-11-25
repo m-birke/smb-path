@@ -46,21 +46,17 @@ def test_smb_path_init_from_path():
     )
 
 
-def test_not_implemented():
-    path = Path("//filshr33.us.evilcorp.com/myShare/newDir")
-
-    with pytest.raises(NotImplementedError):
-        path.mkdir(parents=False, exist_ok=True)
-
-
 @pytest.mark.parametrize(
     "path_func, smb_path_func",
     [
         (Path.open, SmbPath.open),
         (Path.stat, SmbPath.stat),
         (Path.iterdir, SmbPath.iterdir),
+        (Path.mkdir, SmbPath.mkdir),
+        (Path.rmdir, SmbPath.rmdir),
+        (Path.unlink, SmbPath.unlink),
     ],
-    ids=["open", "stat", "iterdir"],
+    ids=["open", "stat", "iterdir", "mkdir", "rmdir", "unlink"],
 )
 def test_function_signatures(path_func, smb_path_func):
     path_params = inspect.signature(path_func).parameters
@@ -72,3 +68,24 @@ def test_function_signatures(path_func, smb_path_func):
 
         assert p_param.name == smbp_param.name
         assert p_param.default == smbp_param.default
+
+
+@pytest.mark.parametrize(
+    "path_func, kwargs",
+    [
+        ("touch", {"mode": 700, "exist_ok": False}),
+        ("chmod", {"mode": 700, "follow_symlinks": True}),
+        ("rename", {"target": "abc"}),
+        ("replace", {"target": "klp"}),
+        ("symlink_to", {"target": "rty", "target_is_directory": False}),
+        ("hardlink_to", {"target": "foo"}),
+    ],
+    ids=["touch", "chmod", "rename", "replace", "symlink", "hardlink"],
+)
+def test_not_implemented_functions(path_func, kwargs):
+    path = Path("//filshr33.us.evilcorp.com/myShare/newDir")
+
+    func = getattr(path, path_func)
+
+    with pytest.raises(NotImplementedError):
+        func(**kwargs)

@@ -21,19 +21,22 @@ All the utility functions of `Path` should work for `SmbPath` as well (like the 
 
 Currently the following SMB dependent functions are implemented:
 
-- `open` (and hence dependent funtions like `read_bytes`, etc.)
-- `stat` (and hence dependent functions like `lstat`, `is_file`, `is_dir`, `exists`, etc.)
+- `open`
+  - and hence dependent funtions like `read_bytes`, etc.
+- `stat`
+  - and hence dependent functions like `lstat`, `is_file`, `is_dir`, `exists`, etc.
 - `iterdir`
+- `mkdir`
+  - **NOTE:** param `mode` has currently no effect, it falls back to `755` !
+- `rmdir`
+- `unlink`
 
 In future versions, some functions probably get overwritten with a dummy since functions like `resolve` have no use for a SMB path.
 
 Missing write operations with current version (and questionable whether all of them will come) are:
 
 - `touch`
-- `mkdir`
-- `rmdir`
 - `chmod`
-- `unlink`
 - `rename`
 - `replace`
 - `symlink_to`

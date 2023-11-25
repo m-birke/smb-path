@@ -5,6 +5,7 @@ from pathlib import Path, PosixPath, WindowsPath
 from typing import Union
 
 import smbclient
+import smbprotocol.exceptions as smb_exceptions
 
 
 class SmbPath:
@@ -28,39 +29,58 @@ class SmbPath:
         for el in dir_list:
             yield Path(str(self / el))
 
-    def mkdir(self, *args, **kwargs):
+    def mkdir(self, mode: int = 511, parents: bool = False, exist_ok: bool = False) -> None:  # noqa ARG002
+        # TODO implement mode
+        try:
+            smbclient.mkdir(str(self))
+        except smb_exceptions.SMBOSError as e:
+            if (not exist_ok) and ("[Error 17]" in str(e)):
+                raise e
+
+            if "[Error 2]" in str(e):
+                if not parents:
+                    raise e
+                self.parent.mkdir(parents=True, exist_ok=True)
+                self.mkdir(parents=False, exist_ok=exist_ok)
+
+    def rmdir(self) -> None:
+        smbclient.rmdir(str(self))
+
+    def touch(self, *args, **kwargs):  # noqa ARG002
+        # smbclient does not provide touch function
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def rmdir(self, *args, **kwargs):
+    def chmod(self, *args, **kwargs):  # noqa ARG002
+        # smbclient does nt provide chmod
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def touch(self, *args, **kwargs):
+    def unlink(self, missing_ok: bool = False) -> None:
+        if not missing_ok:
+            smbclient.remove(str(self))
+            return None
+
+        try:
+            smbclient.remove(str(self))
+        except smb_exceptions.SMBOSError as e:
+            if "[Error 2]" in str(e):
+                return None
+            raise e
+
+    def rename(self, *args, **kwargs):  # noqa ARG002
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def chmod(self, *args, **kwargs):
+    def replace(self, *args, **kwargs):  # noqa ARG002
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def unlink(self, *args, **kwargs):
+    def symlink_to(self, *args, **kwargs):  # noqa ARG002
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def rename(self, *args, **kwargs):
-        msg = "Function not implemented for SmbPath"
-        raise NotImplementedError(msg)
-
-    def replace(self, *args, **kwargs):
-        msg = "Function not implemented for SmbPath"
-        raise NotImplementedError(msg)
-
-    def symlink_to(self, *args, **kwargs):
-        msg = "Function not implemented for SmbPath"
-        raise NotImplementedError(msg)
-
-    def hardlink_to(self, *args, **kwargs):
+    def hardlink_to(self, *args, **kwargs):  # noqa ARG002
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 

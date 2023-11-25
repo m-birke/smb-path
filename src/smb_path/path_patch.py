@@ -7,7 +7,6 @@ import wrapt
 
 from smb_path.smb_path import SmbPath, SmbPosixPath, SmbWindowsPath
 
-
 if sys.version_info >= (3, 12):
 
     @wrapt.when_imported("pathlib")

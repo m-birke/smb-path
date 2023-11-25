@@ -1,5 +1,10 @@
 # `smb-path` Changelog
 
+## 0.4.0 (2023-10-20)
+
+- Support for Python 3.12
+- Additional tests
+
 ## 0.3.0 (2023-10-19)
 
 - Support for Python 3.7, 3.8, 3.9, 3.10

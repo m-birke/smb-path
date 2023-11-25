@@ -1,5 +1,6 @@
-import smb_path.path_patch
+import smb_path.path_patch  # noqa F401
 
+import inspect
 import pytest
 
 from pathlib import Path
@@ -39,7 +40,10 @@ def test_smb_path_init_from_path():
     path = Path(path1, "myFile.txt")
 
     assert isinstance(path, SmbPath)
-    assert str(path) == "//filshr33.us.evilcorp.com/myShare/myDir/myFile.txt" or str(path) == r"\\filshr33.us.evilcorp.com\myShare\myDir\myFile.txt"
+    assert (
+        str(path) == "//filshr33.us.evilcorp.com/myShare/myDir/myFile.txt"
+        or str(path) == r"\\filshr33.us.evilcorp.com\myShare\myDir\myFile.txt"
+    )
 
 
 def test_not_implemented():
@@ -47,3 +51,24 @@ def test_not_implemented():
 
     with pytest.raises(NotImplementedError):
         path.mkdir(parents=False, exist_ok=True)
+
+
+@pytest.mark.parametrize(
+    "path_func, smb_path_func",
+    [
+        (Path.open, SmbPath.open),
+        (Path.stat, SmbPath.stat),
+        (Path.iterdir, SmbPath.iterdir),
+    ],
+    ids=["open", "stat", "iterdir"],
+)
+def test_function_signatures(path_func, smb_path_func):
+    path_params = inspect.signature(path_func).parameters
+    smb_path_params = inspect.signature(smb_path_func).parameters
+
+    for p_param_name, smbp_param_name in zip(path_params, smb_path_params):
+        p_param = path_params[p_param_name]
+        smbp_param = smb_path_params[smbp_param_name]
+
+        assert p_param.name == smbp_param.name
+        assert p_param.default == smbp_param.default

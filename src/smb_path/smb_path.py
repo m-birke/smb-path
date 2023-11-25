@@ -29,31 +29,40 @@ class SmbPath:
             yield Path(str(self / el))
 
     def mkdir(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
     def rmdir(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
     def touch(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
     def chmod(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
     def unlink(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
     def rename(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
     def replace(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
     def symlink_to(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
     def hardlink_to(self, *args, **kwargs):
-        raise NotImplementedError("Function not implemented for SmbPath")
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
 
 
 class SmbWindowsPath(SmbPath, WindowsPath):

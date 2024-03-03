@@ -34,14 +34,14 @@ Currently the following SMB dependent functions are implemented:
 - `symlink_to`
 - `replace`
 
-In future versions, some functions probably get overwritten with a dummy since functions like `resolve` have no use for a SMB path.
-
-Missing operations with current version (and questionable whether all of them will come) are:
+Missing operations (throwing exception) with current version (and questionable whether all of them will come) are:
 
 - `touch`
 - `chmod`
 - `hardlink_to`
 - `glob`
+- `resolve`
+  - Resolves symlinks and makes relative paths absolute, latter is useless for SmbPath
 
 ## Installation
 

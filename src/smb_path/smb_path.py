@@ -84,9 +84,15 @@ class SmbPath:
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def symlink_to(self, *args, **kwargs):  # noqa ARG002
-        msg = "Function not implemented for SmbPath"
-        raise NotImplementedError(msg)
+    def symlink_to(self, target: str, target_is_directory: bool = False) -> None:  # noqa FBT001, FBT002
+        """Make this path a symlink pointing to the target path.
+
+        Note the server must support creating a reparse point using the FSCTL_SET_REPARSE_POINT code.
+        This is typically only Windows servers.
+
+        :param target: Absolute path in the same share
+        """
+        smbclient.symlink(src=target, dst=str(self), target_is_directory=target_is_directory)
 
     def hardlink_to(self, *args, **kwargs):  # noqa ARG002
         msg = "Function not implemented for SmbPath"

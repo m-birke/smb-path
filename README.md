@@ -31,16 +31,17 @@ Currently the following SMB dependent functions are implemented:
 - `rmdir`
 - `unlink`
 - `rename`
+- `symlink_to`
 
 In future versions, some functions probably get overwritten with a dummy since functions like `resolve` have no use for a SMB path.
 
-Missing write operations with current version (and questionable whether all of them will come) are:
+Missing operations with current version (and questionable whether all of them will come) are:
 
 - `touch`
 - `chmod`
 - `replace`
-- `symlink_to`
 - `hardlink_to`
+- `glob`
 
 ## Installation
 

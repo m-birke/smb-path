@@ -47,11 +47,19 @@ class SmbPath:
         smbclient.rmdir(str(self))
 
     def touch(self, *args, **kwargs):  # noqa ARG002
+        """NOT IMPLEMENTED
+
+        raises NotImplementedError
+        """
         # smbclient does not provide touch function
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
     def chmod(self, *args, **kwargs):  # noqa ARG002
+        """NOT IMPLEMENTED
+
+        raises NotImplementedError
+        """
         # smbclient does nt provide chmod
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
@@ -69,7 +77,7 @@ class SmbPath:
             raise e
 
     def rename(self, target: str):
-        """Rename this path to the target path.
+        """Rename this path to the target path (target must not exist).
 
         :param target: Absolute target path on same share
         :return: Returns the new SmbPath instance pointing to the target path
@@ -100,10 +108,19 @@ class SmbPath:
         smbclient.symlink(src=target, dst=str(self), target_is_directory=target_is_directory)
 
     def hardlink_to(self, *args, **kwargs):  # noqa ARG002
+        """NOT IMPLEMENTED
+
+        raises NotImplementedError
+        """
+        # smbclient does nt provide hardlink
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
     def glob(self, *args, **kwargs):  # noqa ARG002
+        """NOT IMPLEMENTED
+
+        raises NotImplementedError
+        """
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 

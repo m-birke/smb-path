@@ -74,12 +74,6 @@ Use `smbclient.ClientConfig` to configure the SMB connection. Eg. `smbclient.Cli
 
 Tested with installation into a `python -m venv` virtual environment.
 
-| OS      | Python                          | Supported |
-| ------- | ------------------------------- | --------- |
-| Windows | 3.11                            | ✅        |
-| Windows | 3.7, 3.8, 3.9, 3.10, 3.12       | ❓        |
-| Linux   | 3.7, 3.8, 3.9, 3.10, 3.11, 3.12 | ✅        |
-
 ## License
 
 `smb-path` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.

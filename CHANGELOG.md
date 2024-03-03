@@ -1,8 +1,9 @@
 # `smb-path` Changelog
 
-## 0.5.0 (2023--)
+## 0.5.0 (2024-03-03)
 
-- Implement functions mkdir, rmdir, unlink, ...
+- Implemented `mkdir`, `rmdir`, `unlink`, `rename`, `symlink_to`, `replace`
+- Windows tested
 
 ## 0.4.0 (2023-10-20)
 

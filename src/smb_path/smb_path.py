@@ -81,9 +81,13 @@ class SmbPath:
         smbclient.rename(str(self), str(target_smb_path))
         return target_smb_path
 
-    def replace(self, *args, **kwargs):  # noqa ARG002
-        msg = "Function not implemented for SmbPath"
-        raise NotImplementedError(msg)
+    def replace(self, target: str):
+        """Rename this path to the target path, overwriting if that path exists.
+
+        :param target: Absolute target path on same share
+        :return: Returns the new SmbPath instance pointing to the target path
+        """
+        smbclient.replace(src=str(self), dst=target)
 
     def symlink_to(self, target: str, target_is_directory: bool = False) -> None:  # noqa FBT001, FBT002
         """Make this path a symlink pointing to the target path.

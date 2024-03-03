@@ -57,8 +57,9 @@ def test_smb_path_init_from_path():
         (Path.unlink, SmbPath.unlink),
         (Path.rename, SmbPath.rename),
         (Path.symlink_to, SmbPath.symlink_to),
+        (Path.replace, SmbPath.replace),
     ],
-    ids=["open", "stat", "iterdir", "mkdir", "rmdir", "unlink", "rename", "symlink"],
+    ids=["open", "stat", "iterdir", "mkdir", "rmdir", "unlink", "rename", "symlink", "replace"],
 )
 def test_function_signatures(path_func, smb_path_func):
     path_params = inspect.signature(path_func).parameters
@@ -77,11 +78,10 @@ def test_function_signatures(path_func, smb_path_func):
     [
         ("touch", {"mode": 700, "exist_ok": False}),
         ("chmod", {"mode": 700, "follow_symlinks": True}),
-        ("replace", {"target": "klp"}),
         ("hardlink_to", {"target": "foo"}),
         ("glob", {"pattern": "bar"}),
     ],
-    ids=["touch", "chmod", "replace", "hardlink", "glob"],
+    ids=["touch", "chmod", "hardlink", "glob"],
 )
 def test_not_implemented_functions(path_func, kwargs):
     path = Path("//filshr33.us.evilcorp.com/myShare/newDir")

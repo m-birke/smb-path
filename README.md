@@ -32,6 +32,7 @@ Currently the following SMB dependent functions are implemented:
 - `unlink`
 - `rename`
 - `symlink_to`
+- `replace`
 
 In future versions, some functions probably get overwritten with a dummy since functions like `resolve` have no use for a SMB path.
 
@@ -39,7 +40,6 @@ Missing operations with current version (and questionable whether all of them wi
 
 - `touch`
 - `chmod`
-- `replace`
 - `hardlink_to`
 - `glob`
 

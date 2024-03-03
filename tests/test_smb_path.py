@@ -56,7 +56,7 @@ def test_smb_path_init_from_path():
         (Path.rmdir, SmbPath.rmdir),
         (Path.unlink, SmbPath.unlink),
         (Path.rename, SmbPath.rename),
-        (Path.symlink_to, SmbPath.symlink_to)
+        (Path.symlink_to, SmbPath.symlink_to),
     ],
     ids=["open", "stat", "iterdir", "mkdir", "rmdir", "unlink", "rename", "symlink"],
 )

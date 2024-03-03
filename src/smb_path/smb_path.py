@@ -9,7 +9,7 @@ import smbprotocol.exceptions as smb_exceptions
 
 
 class SmbPath:
-    def open(  # noqa A003
+    def open(
         self,
         mode: str = "r",
         buffering: int = -1,
@@ -56,7 +56,7 @@ class SmbPath:
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def unlink(self, missing_ok: bool = False) -> None:
+    def unlink(self, missing_ok: bool = False) -> None:  # noqa FBT001, FBT002
         if not missing_ok:
             smbclient.remove(str(self))
             return None
@@ -68,15 +68,16 @@ class SmbPath:
                 return None
             raise e
 
-    def rename(self, target: str):  # noqa ARG002
+    def rename(self, target: str):
         """Rename this path to the target path.
-        
-        :param target: Absolute target path
+
+        :param target: Absolute target path on same share
         :return: Returns the new SmbPath instance pointing to the target path
         """
         target_smb_path = Path(target)
         if not isinstance(target_smb_path, SmbPath):
-            raise ValueError(f"Target path {target} not a SmbPath")
+            exc_msg = f"Target path {target} not a SmbPath"
+            raise ValueError(exc_msg)
         smbclient.rename(str(self), str(target_smb_path))
         return target_smb_path
 

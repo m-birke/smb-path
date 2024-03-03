@@ -30,6 +30,7 @@ Currently the following SMB dependent functions are implemented:
   - **NOTE:** param `mode` has currently no effect, it falls back to `755` !
 - `rmdir`
 - `unlink`
+- `rename`
 
 In future versions, some functions probably get overwritten with a dummy since functions like `resolve` have no use for a SMB path.
 
@@ -37,7 +38,6 @@ Missing write operations with current version (and questionable whether all of t
 
 - `touch`
 - `chmod`
-- `rename`
 - `replace`
 - `symlink_to`
 - `hardlink_to`

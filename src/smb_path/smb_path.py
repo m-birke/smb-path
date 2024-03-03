@@ -68,9 +68,17 @@ class SmbPath:
                 return None
             raise e
 
-    def rename(self, *args, **kwargs):  # noqa ARG002
-        msg = "Function not implemented for SmbPath"
-        raise NotImplementedError(msg)
+    def rename(self, target: str):  # noqa ARG002
+        """Rename this path to the target path.
+        
+        :param target: Absolute target path
+        :return: Returns the new SmbPath instance pointing to the target path
+        """
+        target_smb_path = Path(target)
+        if not isinstance(target_smb_path, SmbPath):
+            raise ValueError(f"Target path {target} not a SmbPath")
+        smbclient.rename(str(self), str(target_smb_path))
+        return target_smb_path
 
     def replace(self, *args, **kwargs):  # noqa ARG002
         msg = "Function not implemented for SmbPath"

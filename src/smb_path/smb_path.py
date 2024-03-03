@@ -92,6 +92,10 @@ class SmbPath:
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
+    def glob(self, *args, **kwargs):  # noqa ARG002
+        msg = "Function not implemented for SmbPath"
+        raise NotImplementedError(msg)
+
 
 class SmbWindowsPath(SmbPath, WindowsPath):
     pass

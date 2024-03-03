@@ -79,8 +79,9 @@ def test_function_signatures(path_func, smb_path_func):
         ("replace", {"target": "klp"}),
         ("symlink_to", {"target": "rty", "target_is_directory": False}),
         ("hardlink_to", {"target": "foo"}),
+        ("glob", {"pattern": "bar"}),
     ],
-    ids=["touch", "chmod", "replace", "symlink", "hardlink"],
+    ids=["touch", "chmod", "replace", "symlink", "hardlink", "glob"],
 )
 def test_not_implemented_functions(path_func, kwargs):
     path = Path("//filshr33.us.evilcorp.com/myShare/newDir")

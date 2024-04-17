@@ -2,6 +2,8 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/smb-path.svg)](https://pypi.org/project/smb-path)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/smb-path.svg)](https://pypi.org/project/smb-path)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Test smb-path](https://github.com/m-birke/smb-path/actions/workflows/test-smb-path.yml/badge.svg)](https://github.com/m-birke/smb-path/actions/workflows/test-smb-path.yml)
 
 -----
 

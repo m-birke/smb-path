@@ -1,5 +1,9 @@
 # `smb-path` Changelog
 
+## 0.5.1 (2025-01-24)
+
+- Support Python 3.13 (No code changes necessary)
+
 ## 0.5.0 (2024-03-03)
 
 - Implemented `mkdir`, `rmdir`, `unlink`, `rename`, `symlink_to`, `replace`

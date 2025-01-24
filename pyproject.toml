@@ -8,7 +8,8 @@ dynamic = ["version"]
 description = 'pathlib-like Path object for smb protocol'
 readme = "README.md"
 requires-python = ">=3.7"
-license = "MIT"
+license-exressions = "MIT"
+license-file = "LICENSE.txt"
 keywords = [
   "SMB",
   "SMBv2",
@@ -29,6 +30,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: Implementation :: CPython",
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX :: Linux",
@@ -39,7 +41,9 @@ dependencies = [
 ]
 
 [project.urls]
+Changelog = "https://github.com/m-birke/smb-path/blob/main/CHANGELOG.md"
 Documentation = "https://github.com/m-birke/smb-path#readme"
+Homepage = "https://github.com/m-birke/smb-path"
 Issues = "https://github.com/m-birke/smb-path/issues"
 Source = "https://github.com/m-birke/smb-path"
 

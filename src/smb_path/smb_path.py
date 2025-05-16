@@ -1,8 +1,9 @@
+import fnmatch
 from collections.abc import Generator
 from io import TextIOWrapper
 from os import stat_result
-from pathlib import Path, PosixPath, WindowsPath
-from typing import Union
+from pathlib import Path, PosixPath, PurePath, WindowsPath
+from typing import Union, Tuple
 
 import smbclient
 import smbprotocol.exceptions as smb_exceptions
@@ -116,13 +117,39 @@ class SmbPath:
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def glob(self, *args, **kwargs):  # noqa ARG002
-        """NOT IMPLEMENTED
+    def glob(self, pattern: str):
+        """Iterate over this subtree and yield all existing files (of any
+        kind, including directories) matching the given relative pattern."""
 
-        raises NotImplementedError
-        """
-        msg = "Function not implemented for SmbPath"
-        raise NotImplementedError(msg)
+        def _recursive_glob(path: SmbPath, parts: Tuple[str, ...]) -> Generator[Path, None, None]:
+            if not parts:
+                yield path
+                return
+            part, *rest = parts
+            if part == '**':
+                # Match zero or more directories
+                yield from _recursive_glob(path, rest)
+                try:
+                    for entry in path.iterdir():
+                        if entry.is_dir():
+                            yield from _recursive_glob(entry, parts)
+                except (smb_exceptions.SMBOSError, OSError):
+                    return
+            else:
+                try:
+                    for entry in path.iterdir():
+                        if fnmatch.fnmatch(entry.name, part):
+                            if rest:
+                                if entry.is_dir():
+                                    yield from _recursive_glob(entry, rest)
+                            else:
+                                yield entry
+                except (smb_exceptions.SMBOSError, OSError):
+                    return
+
+        # Split the pattern into parts
+        pattern_parts = PurePath(pattern).parts
+        yield from _recursive_glob(self, pattern_parts)
 
 
 class SmbWindowsPath(SmbPath, WindowsPath):

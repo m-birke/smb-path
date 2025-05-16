@@ -1,5 +1,9 @@
 # `smb-path` Changelog
 
+## 0.6.0 (2025-05-16)
+
+- Implemented `glob`
+
 ## 0.5.1 (2025-01-24)
 
 - Support Python 3.13 (No code changes necessary)

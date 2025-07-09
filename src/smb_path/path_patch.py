@@ -51,7 +51,7 @@ else:
 
             if isinstance(user_args[0], str):
                 # check for server URL pattern of first arg
-                if not re.match(r"(//|\\\\)([a-z0-9]+)((\.[a-z0-9]+)*)(\.[a-z]+){1}", user_args[0]):
+                if not re.match(r"(//|\\\\)([a-z0-9_-]+)((\.[a-z0-9_-]+)*)(\.[a-z]+){1}", user_args[0]):
                     return original_new(*args)  # not smb
 
             elif not isinstance(user_args[0], SmbPath):

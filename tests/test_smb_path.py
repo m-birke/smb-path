@@ -25,10 +25,18 @@ def test_non_smb_path_init_from_path():
     assert str(path) == "C:/Users/Yuan/Documents" or str(path) == r"C:\Users\Yuan\Documents"
 
 
-def test_smb_path_init_from_str():
-    path_string = "//filshr33.us.evilcorp.com/myShare/myDir/"
-
-    path = Path(path_string)
+@pytest.mark.parametrize(
+    "smb_path_str",
+    [
+        ("//filer.us.senez.com/myShare/myDir/"),
+        ("//filshr33.eu.ourcorp.com/YourShare/YourDir/log.txt"),
+        ("//file-share.eu-pt.minez.com/theirshare/theirdir/log.txt"),
+        ("//file_share.eu_nw.p-i.com/theirshare/theirdir/log.txt"),
+    ],
+    ids=["letters", "numbers", "hyphen", "underscore"],
+)
+def test_smb_path_init_from_str(smb_path_str: str):
+    path = Path(smb_path_str)
 
     assert isinstance(path, SmbPath)
 

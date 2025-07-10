@@ -53,13 +53,13 @@ pip install smb-path
 
 ## Usage
 
-`smb-path` just needs to be installed. After the installation, you just use `Path()` to instantiate a `SmbPath`. It is checked whether the provided path string applies to the regex pattern `r"(//|\\\\)([a-z0-9]+)((\.[a-z0-9]+)*)(\.[a-z]+){1}"`.
+`smb-path` just needs to be installed. After the installation, you just use `Path()` to instantiate a `SmbPath`. It is checked whether the provided path string applies to the regex pattern `r"(//|\\\\)([a-z0-9_-]+)((\.[a-z0-9_-]+)*)(\.[a-z]+){1}"`.
 
 The path string
 
 - must start with `//` or `\\`
-- must continue with a server name, a-z and 0-9 allowed, eg. `filshr33`
-- optionally an arbitrary number of periods separated by a `.`, a-z and 0-9 allowed, eg. `.us.dieterscompany`
+- must continue with a server name, `a-z`, `0-9` and `_`, `-` allowed, eg. `filshr33`
+- optionally an arbitrary number of periods separated by a `.`, `a-z`, `0-9`, `_`, `-` allowed, eg. `.us.dieterscompany`
 - must continue with an url closing with `.` then a-z, eg. `.com`
 - can contain trailing fileshare names, directories or files, eg. `/myShare/myDir/myFile.txt`
 

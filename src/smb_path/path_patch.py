@@ -7,6 +7,9 @@ import wrapt
 
 from smb_path.smb_path import SmbPath, SmbPosixPath, SmbWindowsPath
 
+_SMB_PATH_REGEX = r"(//|\\\\)([a-z0-9_-]+)((\.[a-z0-9_-]+)*)(\.[a-z]+){1}"
+
+
 if sys.version_info >= (3, 12):
 
     @wrapt.when_imported("pathlib")
@@ -23,7 +26,7 @@ if sys.version_info >= (3, 12):
 
             if isinstance(user_args[0], str):
                 # check for server URL pattern of first arg
-                if not re.match(r"(//|\\\\)([a-z0-9]+)((\.[a-z0-9]+)*)(\.[a-z]+){1}", user_args[0]):
+                if not re.match(_SMB_PATH_REGEX, user_args[0]):
                     return original_new(*args)  # not smb
 
             elif not isinstance(user_args[0], SmbPath):
@@ -51,7 +54,7 @@ else:
 
             if isinstance(user_args[0], str):
                 # check for server URL pattern of first arg
-                if not re.match(r"(//|\\\\)([a-z0-9_-]+)((\.[a-z0-9_-]+)*)(\.[a-z]+){1}", user_args[0]):
+                if not re.match(_SMB_PATH_REGEX, user_args[0]):
                     return original_new(*args)  # not smb
 
             elif not isinstance(user_args[0], SmbPath):

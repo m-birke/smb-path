@@ -1,5 +1,10 @@
 # `smb-path` Changelog
 
+## 0.6.1 (2025-07-10)
+
+- Allow undescore and hyphen in URLs
+- Bugfix: Proper return type in iterdir/glob
+
 ## 0.6.0 (2025-05-16)
 
 - Implemented `glob`

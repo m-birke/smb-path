@@ -3,7 +3,7 @@ from collections.abc import Generator
 from io import TextIOWrapper
 from os import stat_result
 from pathlib import Path, PosixPath, PurePath, WindowsPath
-from typing import Union, Tuple
+from typing import Tuple, Union
 
 import smbclient
 import smbprotocol.exceptions as smb_exceptions
@@ -47,7 +47,7 @@ class SmbPath:
     def rmdir(self) -> None:
         smbclient.rmdir(str(self))
 
-    def touch(self, *args, **kwargs):  # noqa ARG002
+    def touch(self, *args, **kwargs):
         """NOT IMPLEMENTED
 
         raises NotImplementedError
@@ -56,7 +56,7 @@ class SmbPath:
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def chmod(self, *args, **kwargs):  # noqa ARG002
+    def chmod(self, *args, **kwargs):
         """NOT IMPLEMENTED
 
         raises NotImplementedError
@@ -108,7 +108,7 @@ class SmbPath:
         """
         smbclient.symlink(src=target, dst=str(self), target_is_directory=target_is_directory)
 
-    def hardlink_to(self, *args, **kwargs):  # noqa ARG002
+    def hardlink_to(self, *args, **kwargs):
         """NOT IMPLEMENTED
 
         raises NotImplementedError
@@ -126,7 +126,7 @@ class SmbPath:
                 yield path
                 return
             part, *rest = parts
-            if part == '**':
+            if part == "**":
                 # Match zero or more directories
                 yield from _recursive_glob(path, rest)
                 try:

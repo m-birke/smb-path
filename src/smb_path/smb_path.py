@@ -153,9 +153,9 @@ class SmbPath(PurePath):
         yield from _recursive_glob(self, pattern_parts)
 
 
-class SmbWindowsPath(SmbPath, WindowsPath):
+class SmbWindowsPath(SmbPath, WindowsPath):  # type: ignore[misc]
     pass
 
 
-class SmbPosixPath(SmbPath, PosixPath):
+class SmbPosixPath(SmbPath, PosixPath):  # type: ignore[misc]
     pass

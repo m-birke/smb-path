@@ -9,7 +9,7 @@ import smbclient
 import smbprotocol.exceptions as smb_exceptions
 
 
-class SmbPath:
+class SmbPath(PurePath):
     def open(
         self,
         mode: str = "r",
@@ -121,11 +121,12 @@ class SmbPath:
         """Iterate over this subtree and yield all existing files (of any
         kind, including directories) matching the given relative pattern."""
 
-        def _recursive_glob(path: SmbPath, parts: Tuple[str, ...]) -> Generator[Path, None, None]:
+        def _recursive_glob(path: SmbPath, parts: Tuple[str, ...]) -> Generator:
             if not parts:
                 yield path
                 return
-            part, *rest = parts
+            part = parts[0]
+            rest = parts[1:]
             if part == "**":
                 # Match zero or more directories
                 yield from _recursive_glob(path, rest)

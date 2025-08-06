@@ -1,15 +1,15 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
 name = "smb-path"
 dynamic = ["version"]
-description = 'pathlib-like Path object for smb protocol'
+description = "pathlib-like Path object for smb protocol"
 readme = "README.md"
 requires-python = ">=3.7"
-license-exressions = "MIT"
-license-file = "LICENSE.txt"
+license = "MIT"
+license-files = ["LICENSE"]
 keywords = [
   "SMB",
   "SMBv2",
@@ -22,7 +22,9 @@ authors = [
   { name = "Birkenbach Marius", email = "wesci@web.de" },
 ]
 classifiers = [
+  "License :: OSI Approved :: MIT License",
   "Development Status :: 4 - Beta",
+  "Typing :: Typed",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
@@ -47,8 +49,13 @@ Homepage = "https://github.com/m-birke/smb-path"
 Issues = "https://github.com/m-birke/smb-path/issues"
 Source = "https://github.com/m-birke/smb-path"
 
+[tool.hatch]
+build.hooks.vcs.version-file = "src/smb_path/_version.py"
+build.targets.wheel.packages = ["src/smb_path/"]
+
 [tool.hatch.version]
-path = "src/smb_path/__about__.py"
+source = "vcs"
+raw-options = {version_scheme = "guess-next-dev"}
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -68,7 +75,7 @@ cov = [
 ]
 
 [[tool.hatch.envs.all.matrix]]
-python = ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
+python = ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
 [tool.hatch.envs.types]
 extra-dependencies = [
@@ -80,8 +87,6 @@ check = "mypy --install-types --non-interactive {args:src/smb_path tests}"
 [tool.ruff]
 target-version = "py37"
 line-length = 120
-
-[tool.ruff.lint]
 select = [
   "A",
   "ARG",
@@ -124,13 +129,13 @@ unfixable = [
   "F401",
 ]
 
-[tool.ruff.lint.isort]
+[tool.ruff.isort]
 known-first-party = ["smb_path"]
 
-[tool.ruff.lint.flake8-tidy-imports]
+[tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"
 
-[tool.ruff.lint.per-file-ignores]
+[tool.ruff.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 

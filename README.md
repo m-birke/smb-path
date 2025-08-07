@@ -1,23 +1,17 @@
 # smb-path
 
-[![Test smb-path](https://github.com/m-birke/smb-path/actions/workflows/test-smb-path.yml/badge.svg)](https://github.com/m-birke/smb-path/actions/workflows/test-smb-path.yml)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/m-birke/smb-path/static-code-check.yml)
-[![PyPI - Version](https://img.shields.io/pypi/v/smb-path.svg)](https://pypi.org/project/smb-path)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/smb-path.svg)](https://pypi.org/project/smb-path)
-![GitHub License](https://img.shields.io/github/license/m-birke/smb-path)
-![PyPI - Status](https://img.shields.io/pypi/status/smb-path)
-![PyPI - Format](https://img.shields.io/pypi/format/smb-path)
-![PyPI - Types](https://img.shields.io/pypi/types/smb-path)
-![PyPI - Implementation](https://img.shields.io/pypi/implementation/smb-path)
-[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Linting: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+|     |     |
+| --- | --- |
+| Version | [![PyPI - Version](https://img.shields.io/pypi/v/smb-path.svg)](https://pypi.org/project/smb-path) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/smb-path.svg)](https://pypi.org/project/smb-path) |
+| Project | ![GitHub License](https://img.shields.io/github/license/m-birke/smb-path) ![PyPI - Status](https://img.shields.io/pypi/status/smb-path) ![PyPI - Format](https://img.shields.io/pypi/format/smb-path) ![PyPI - Implementation](https://img.shields.io/pypi/implementation/smb-path) |
+| CI | ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/m-birke/smb-path/static-code-check.yml) [![Test smb-path](https://github.com/m-birke/smb-path/actions/workflows/test-smb-path.yml/badge.svg)](https://github.com/m-birke/smb-path/actions/workflows/test-smb-path.yml) |
+| Code | ![PyPI - Types](https://img.shields.io/pypi/types/smb-path) [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/) [![Linting: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) |
 
 -----
 
 pathlib-like Path object for smb protocol
 
-**Table of Contents**
+## Table of Contents
 
 - [About](#about)
 - [Installation](#installation)

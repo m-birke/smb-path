@@ -19,7 +19,7 @@ keywords = [
   "Fileshare",
 ]
 authors = [
-  { name = "Birkenbach Marius", email = "wesci@web.de" },
+  { name = "m-birke", email = "wesci@web.de" },
 ]
 classifiers = [
   "License :: OSI Approved :: MIT License",
@@ -57,6 +57,7 @@ source = "vcs"
 raw-options = {version_scheme = "guess-next-dev"}
 
 [tool.hatch.envs.default]
+path = "./.hatch/default"
 dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
@@ -77,6 +78,7 @@ cov = [
 python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
 [tool.hatch.envs.types]
+path = "./.hatch/types"
 extra-dependencies = [
   "mypy>=1.0.0",
 ]
@@ -86,6 +88,8 @@ check = "mypy --install-types --non-interactive {args:src/smb_path tests}"
 [tool.ruff]
 target-version = "py38"
 line-length = 120
+
+[tool.ruff.lint]
 select = [
   "A",
   "ARG",
@@ -128,13 +132,13 @@ unfixable = [
   "F401",
 ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["smb_path"]
 
-[tool.ruff.flake8-tidy-imports]
+[tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 

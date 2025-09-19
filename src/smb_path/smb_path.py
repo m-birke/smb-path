@@ -28,7 +28,7 @@ class SmbPath(PurePath):
     def iterdir(self) -> Generator:
         dir_list = smbclient.listdir(str(self))
         for el in dir_list:
-            yield SmbPath(str(self / el))
+            yield Path(str(self / el))
 
     def mkdir(self, mode: int = 511, parents: bool = False, exist_ok: bool = False) -> None:  # noqa ARG002
         # TODO implement mode

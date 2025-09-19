@@ -1,5 +1,9 @@
 # `smb-path` Changelog
 
+## 0.6.2 (2025-09-19)
+
+- Bugfix: Undo "Bugfix: Proper return type in iterdir/glob"
+
 ## 0.6.1 (2025-07-10)
 
 - Allow undescore and hyphen in URLs

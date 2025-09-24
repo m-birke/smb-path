@@ -10,7 +10,7 @@ repos:
     rev: v1.17.0
     hooks:
       - id: mypy
-        args: [--install-types]
+        args: [--install-types, --non-interactive]
         additional_dependencies: [
           smbprotocol,
           wrapt,

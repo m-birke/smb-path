@@ -1,23 +1,26 @@
 #exclude: ''
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.5
+    rev: v0.14.3
     hooks:
       - id: ruff-check
         args: [ --fix ]
       - id: ruff-format
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.17.0
+    rev: v1.18.2
     hooks:
       - id: mypy
         args: [--install-types, --non-interactive]
+<<<<<<< before updating
         additional_dependencies: [
           smbprotocol,
           wrapt,
           pytest
         ]
+=======
+>>>>>>> after updating
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-json
       - id: check-toml

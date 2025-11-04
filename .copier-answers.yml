@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: '0.5'
+_commit: '1.0'
 _src_path: https://github.com/m-birke/python-project-template.git
 package_name: smb_path
 project_description: pathlib-like Path object for smb protocol

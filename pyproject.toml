@@ -145,6 +145,7 @@ ban-relative-imports = "all"
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
 
+<<<<<<< before updating
 [[tool.mypy.overrides]]
 module = [
   "smbclient",
@@ -153,6 +154,12 @@ module = [
   "pytest",
 ]
 follow_untyped_imports = true
+=======
+#[[tool.mypy.overrides]]
+#module = [
+#]
+#follow_untyped_imports = true
+>>>>>>> after updating
 #ignore_missing_imports = true
 
 [tool.coverage.run]

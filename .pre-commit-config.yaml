@@ -11,14 +11,6 @@ repos:
     hooks:
       - id: mypy
         args: [--install-types, --non-interactive]
-<<<<<<< before updating
-        additional_dependencies: [
-          smbprotocol,
-          wrapt,
-          pytest
-        ]
-=======
->>>>>>> after updating
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:

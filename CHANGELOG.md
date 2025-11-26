@@ -1,5 +1,11 @@
 # `smb-path` Changelog
 
+## 0.7.0 (2025-11-26)
+
+- Implemented `resolve`
+- Bugfix: `glob` compatible signatures for Python 3.12 and 3.13
+- Dropped support for Python 3.8 and 3.9
+
 ## 0.6.2 (2025-09-19)
 
 - Bugfix: Undo "Bugfix: Proper return type in iterdir/glob"

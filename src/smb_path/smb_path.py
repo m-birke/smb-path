@@ -3,7 +3,6 @@ from collections.abc import Generator
 from io import TextIOWrapper
 from os import stat_result
 from pathlib import Path, PosixPath, PurePath, WindowsPath
-from typing import Tuple, Union
 
 import smbclient
 import smbprotocol.exceptions as smb_exceptions
@@ -14,9 +13,9 @@ class SmbPath(PurePath):
         self,
         mode: str = "r",
         buffering: int = -1,
-        encoding: Union[str, None] = None,
-        errors: Union[str, None] = None,
-        newline: Union[str, None] = None,
+        encoding: str | None = None,
+        errors: str | None = None,
+        newline: str | None = None,
     ) -> TextIOWrapper:
         return smbclient.open_file(
             str(self), mode=mode, buffering=buffering, encoding=encoding, errors=errors, newline=newline
@@ -129,7 +128,7 @@ class SmbPath(PurePath):
         """Iterate over this subtree and yield all existing files (of any
         kind, including directories) matching the given relative pattern."""
 
-        def _recursive_glob(path: SmbPath, parts: Tuple[str, ...]) -> Generator:
+        def _recursive_glob(path: SmbPath, parts: tuple[str, ...]) -> Generator:
             if not parts:
                 yield path
                 return

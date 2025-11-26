@@ -77,7 +77,7 @@ def test_function_signatures(path_func, smb_path_func):
 
     assert len(path_params) == len(smb_path_params)
 
-    for p_param_name, smbp_param_name in zip(path_params, smb_path_params):
+    for p_param_name, smbp_param_name in zip(path_params, smb_path_params, strict=True):
         p_param = path_params[p_param_name]
         smbp_param = smb_path_params[smbp_param_name]
 

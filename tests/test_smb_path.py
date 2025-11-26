@@ -66,9 +66,10 @@ def test_smb_path_init_from_path():
         (Path.rename, SmbPath.rename),
         (Path.symlink_to, SmbPath.symlink_to),
         (Path.replace, SmbPath.replace),
+        (Path.resolve, SmbPath.resolve),
         (Path.glob, SmbPath.glob),
     ],
-    ids=["open", "stat", "iterdir", "mkdir", "rmdir", "unlink", "rename", "symlink", "replace", "glob"],
+    ids=["open", "stat", "iterdir", "mkdir", "rmdir", "unlink", "rename", "symlink", "replace", "resolve", "glob"],
 )
 def test_function_signatures(path_func, smb_path_func):
     path_params = inspect.signature(path_func).parameters

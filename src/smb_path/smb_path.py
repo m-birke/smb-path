@@ -98,6 +98,14 @@ class SmbPath(PurePath):
         """
         smbclient.replace(src=str(self), dst=target)
 
+    def resolve(self, strict: bool = False):  # noqa FBT001, FBT002, ARG002
+        """Returns itself as is. SMB Paths are always absolute.
+
+        :param strict: has no impact, defaults to False
+        :return: itself as is
+        """
+        return self
+
     def symlink_to(self, target: str, target_is_directory: bool = False) -> None:  # noqa FBT001, FBT002
         """Make this path a symlink pointing to the target path.
 

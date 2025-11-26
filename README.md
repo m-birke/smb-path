@@ -37,6 +37,10 @@ Currently the following SMB dependent functions are implemented:
   - and hence dependent functions like `lstat`, `is_file`, `is_dir`, `exists`, etc.
 - `rename`
 - `replace`
+- `resolve`
+  - Resolves symlinks and makes relative paths absolute (latter is useless for SmbPath)
+  - SMB Paths are always absolute
+  - Currently just returns itself as is
 - `rmdir`
 - `symlink_to`
 - `unlink`
@@ -45,8 +49,6 @@ Missing operations (throwing exception) with current version (and questionable w
 
 - `chmod`
 - `hardlink_to`
-- `resolve`
-  - Resolves symlinks and makes relative paths absolute, latter is useless for SmbPath
 - `touch`
 
 ## Installation

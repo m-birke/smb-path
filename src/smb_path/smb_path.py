@@ -1,8 +1,10 @@
 import fnmatch
+import sys
 from collections.abc import Generator
 from io import TextIOWrapper
 from os import stat_result
 from pathlib import Path, PosixPath, PurePath, WindowsPath
+from typing import Any
 
 import smbclient
 import smbprotocol.exceptions as smb_exceptions
@@ -124,10 +126,38 @@ class SmbPath(PurePath):
         msg = "Function not implemented for SmbPath"
         raise NotImplementedError(msg)
 
-    def glob(self, pattern: str):
-        """Iterate over this subtree and yield all existing files (of any
-        kind, including directories) matching the given relative pattern."""
+    if sys.version_info >= (3, 13):
 
+        def glob(self, pattern: str, *, case_sensitive: Any = None, recurse_symlinks: bool = False):  # noqa ARG002
+            """Iterate over this subtree and yield all existing files (of any
+            kind, including directories) matching the given relative pattern.
+
+            :param pattern: The pattern to match
+            :param case_sensitive: Has no effect, present for signature compatibility
+            :param recurse_symlinks: Has no effect, present for signature compatibility
+            """
+            return self._glob_impl(pattern)
+    elif sys.version_info >= (3, 12):
+
+        def glob(self, pattern: str, *, case_sensitive: Any = None):  # noqa ARG002
+            """Iterate over this subtree and yield all existing files (of any
+            kind, including directories) matching the given relative pattern.
+
+            :param pattern: The pattern to match
+            :param case_sensitive: Has no effect, present for signature compatibility
+            """
+            return self._glob_impl(pattern)
+    else:
+
+        def glob(self, pattern: str):
+            """Iterate over this subtree and yield all existing files (of any
+            kind, including directories) matching the given relative pattern.
+
+            :param pattern: The pattern to match
+            """
+            return self._glob_impl(pattern)
+
+    def _glob_impl(self, pattern: str):
         def _recursive_glob(path: SmbPath, parts: tuple[str, ...]) -> Generator:
             if not parts:
                 yield path

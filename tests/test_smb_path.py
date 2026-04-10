@@ -32,8 +32,10 @@ def test_non_smb_path_init_from_path():
         ("//filshr33.eu.ourcorp.com/YourShare/YourDir/log.txt"),
         ("//file-share.eu-pt.minez.com/theirshare/theirdir/log.txt"),
         ("//file_share.eu_nw.p-i.com/theirshare/theirdir/log.txt"),
+        ("//file_share.local/theirshare/theirdir/log.txt"),
+        ("//file_share/theirshare/theirdir/log.txt"),
     ],
-    ids=["letters", "numbers", "hyphen", "underscore"],
+    ids=["letters", "numbers", "hyphen", "underscore", "local", "no_tld"],
 )
 def test_smb_path_init_from_str(smb_path_str: str):
     path = Path(smb_path_str)

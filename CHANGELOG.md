@@ -1,5 +1,9 @@
 # `smb-path` Changelog
 
+## 0.7.1 (2026-04-10)
+
+- Make the top level domain optional. This Enables local shares w/o tld
+
 ## 0.7.0 (2025-11-26)
 
 - Implemented `resolve`

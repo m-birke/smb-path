@@ -7,7 +7,7 @@ import wrapt
 
 from smb_path.smb_path import SmbPath, SmbPosixPath, SmbWindowsPath
 
-_SMB_PATH_REGEX = r"(//|\\\\)([a-z0-9_-]+)((\.[a-z0-9_-]+)*)(\.[a-z]+){1}"
+_SMB_PATH_REGEX = r"(//|\\\\)([a-z0-9_-]+)((\.[a-z0-9_-]+)*)(\.[a-z]+)?"
 
 
 if sys.version_info >= (3, 12):

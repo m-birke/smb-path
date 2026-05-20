@@ -1,7 +1,9 @@
 import smb_path.path_patch  # noqa F401
 
 import inspect
+
 import pytest
+import smbclient
 
 from pathlib import Path
 from smb_path.smb_path import SmbPath
@@ -77,14 +79,16 @@ def test_function_signatures(path_func, smb_path_func):
     path_params = inspect.signature(path_func).parameters
     smb_path_params = inspect.signature(smb_path_func).parameters
 
-    assert len(path_params) == len(smb_path_params)
+    # Every Path parameter must appear in matching position with the same
+    # default. Any extra trailing SmbPath parameter must be VAR_KEYWORD.
+    assert len(smb_path_params) >= len(path_params)
 
-    for p_param_name, smbp_param_name in zip(path_params, smb_path_params, strict=True):
-        p_param = path_params[p_param_name]
-        smbp_param = smb_path_params[smbp_param_name]
-
+    for p_param, smbp_param in zip(path_params.values(), smb_path_params.values(), strict=False):
         assert p_param.name == smbp_param.name
         assert p_param.default == smbp_param.default
+
+    for extra in list(smb_path_params.values())[len(path_params) :]:
+        assert extra.kind is inspect.Parameter.VAR_KEYWORD
 
 
 @pytest.mark.parametrize(
@@ -103,3 +107,25 @@ def test_not_implemented_functions(path_func, kwargs):
 
     with pytest.raises(NotImplementedError):
         func(**kwargs)
+
+
+def test_open_forwards_kwargs(monkeypatch):
+    captured = {}
+
+    def fake(_path, **kwargs):
+        captured.update(kwargs)
+        return object()
+
+    monkeypatch.setattr(smbclient, "open_file", fake)
+
+    SmbPath("//host/share/file.txt").open(mode="rb", share_access="r", username="alice")
+
+    assert captured == {
+        "mode": "rb",
+        "buffering": -1,
+        "encoding": None,
+        "errors": None,
+        "newline": None,
+        "share_access": "r",
+        "username": "alice",
+    }

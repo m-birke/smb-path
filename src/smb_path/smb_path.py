@@ -1,6 +1,6 @@
 import fnmatch
 import sys
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from io import TextIOWrapper
 from os import stat_result
 from pathlib import Path, PosixPath, PurePath, WindowsPath
@@ -188,6 +188,65 @@ class SmbPath(PurePath):
         # Split the pattern into parts
         pattern_parts = PurePath(pattern).parts
         yield from _recursive_glob(self, pattern_parts)
+
+    if sys.version_info >= (3, 12):
+
+        def walk(
+            self,
+            top_down: bool = True,  # noqa FBT001, FBT002
+            on_error: Callable[[OSError], None] | None = None,
+            follow_symlinks: bool = False,  # noqa FBT001, FBT002
+        ) -> Generator:
+            """Walk the directory tree from this directory, similar to os.walk().
+
+            Yields 3-tuples of (dirpath, dirnames, filenames).
+
+            :param top_down: Yield a directory before (True) or after (False) its subdirectories.
+                In top-down mode dirnames can be modified in-place to prune the walk.
+            :param on_error: Called with the OSError if a directory cannot be listed. Errors are
+                ignored if not given.
+            :param follow_symlinks: Whether to walk into symlinks pointing to directories. If False,
+                such a symlink is reported in filenames (like pathlib, unlike os.walk).
+            """
+            return self._walk_impl(top_down, on_error, follow_symlinks)
+
+    def _walk_impl(
+        self,
+        top_down: bool,  # noqa FBT001
+        on_error: Callable[[OSError], None] | None,
+        follow_symlinks: bool,  # noqa FBT001
+    ) -> Generator:
+        def _recursive_walk(path: Any) -> Generator:
+            dirnames: list[str] = []
+            filenames: list[str] = []
+            try:
+                for entry in smbclient.scandir(str(path)):
+                    try:
+                        is_dir = entry.is_dir(follow_symlinks=follow_symlinks)
+                    except OSError:
+                        # Carried over from os.path.isdir().
+                        is_dir = False
+                    if is_dir:
+                        dirnames.append(entry.name)
+                    else:
+                        filenames.append(entry.name)
+            except OSError as error:
+                if on_error is not None:
+                    on_error(error)
+                return
+
+            if not top_down:
+                for dirname in dirnames:
+                    yield from _recursive_walk(Path(str(path / dirname)))
+                yield path, dirnames, filenames
+                return
+
+            yield path, dirnames, filenames
+            # dirnames may have been pruned in-place by the caller during the yield above
+            for dirname in dirnames:
+                yield from _recursive_walk(Path(str(path / dirname)))
+
+        yield from _recursive_walk(self)
 
 
 class SmbWindowsPath(SmbPath, WindowsPath):  # type: ignore[misc]

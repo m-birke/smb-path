@@ -1,12 +1,29 @@
 import smb_path.path_patch  # noqa F401
 
 import inspect
+import sys
 
 import pytest
 import smbclient
 
 from pathlib import Path
 from smb_path.smb_path import SmbPath
+
+import smbprotocol.exceptions as smb_exceptions
+
+
+def _assert_signatures_match(path_func, smb_path_func):
+    path_params = inspect.signature(path_func).parameters
+    smb_path_params = inspect.signature(smb_path_func).parameters
+
+    assert len(path_params) == len(smb_path_params)
+
+    for p_param_name, smbp_param_name in zip(path_params, smb_path_params, strict=True):
+        p_param = path_params[p_param_name]
+        smbp_param = smb_path_params[smbp_param_name]
+
+        assert p_param.name == smbp_param.name
+        assert p_param.default == smbp_param.default
 
 
 def test_non_smb_path_init_from_str():
@@ -87,6 +104,11 @@ def test_function_signatures(path_func, smb_path_func):
         assert p_param.name == smbp_param.name
         assert p_param.default == smbp_param.default
 
+
+@pytest.mark.skipif(sys.version_info < (3, 12), reason="Path.walk was added in Python 3.12")
+def test_walk_signature():
+    _assert_signatures_match(Path.walk, SmbPath.walk)  # type: ignore[attr-defined]
+
     for extra in list(smb_path_params.values())[len(path_params) :]:
         assert extra.kind is inspect.Parameter.VAR_KEYWORD
 
@@ -129,3 +151,218 @@ def test_open_forwards_kwargs(monkeypatch):
         "share_access": "r",
         "username": "alice",
     }
+
+# ---------------------------------------------------------------------------
+# walk
+# ---------------------------------------------------------------------------
+
+pytestmark_walk = pytest.mark.skipif(sys.version_info < (3, 12), reason="Path.walk was added in Python 3.12")
+
+_ROOT = "//filshr33.us.evilcorp.com/myShare"
+
+
+def _normalize_smb_path(path) -> str:
+    return str(path).replace("\\", "/").rstrip("/")
+
+
+class _FakeDirEntry:
+    """Minimal stand in for smbclient.SMBDirEntry."""
+
+    def __init__(self, name: str, *, is_dir: bool = False, is_symlink: bool = False):
+        self.name = name
+        self._is_dir = is_dir
+        self._is_symlink = is_symlink
+
+    def is_dir(self, follow_symlinks: bool = True) -> bool:  # noqa FBT001, FBT002
+        if self._is_symlink:
+            return self._is_dir and follow_symlinks
+        return self._is_dir
+
+    def is_symlink(self) -> bool:
+        return self._is_symlink
+
+
+def _dir(name: str) -> _FakeDirEntry:
+    return _FakeDirEntry(name, is_dir=True)
+
+
+def _file(name: str) -> _FakeDirEntry:
+    return _FakeDirEntry(name)
+
+
+def _link_dir(name: str) -> _FakeDirEntry:
+    return _FakeDirEntry(name, is_dir=True, is_symlink=True)
+
+
+@pytest.fixture
+def fake_scandir(monkeypatch):
+    """Install a fake smbclient.scandir backed by an in-memory tree.
+
+    Keys are path strings with normalized separators, values are entry lists or an
+    exception instance to raise instead of listing.
+    """
+    calls = []
+
+    def _install(tree: dict):
+        def scandir(path, *args, **kwargs):  # noqa ARG001
+            calls.append(path)
+            key = _normalize_smb_path(path)
+            entries = tree[key]
+            if isinstance(entries, Exception):
+                raise entries
+            yield from entries
+
+        monkeypatch.setattr("smb_path.smb_path.smbclient.scandir", scandir)
+        return calls
+
+    _install.calls = calls
+    return _install
+
+
+def _walk(root: str = _ROOT, **kwargs):
+    return list(Path(root).walk(**kwargs))  # type: ignore[attr-defined]
+
+
+def _names(result):
+    """Reduce walk output to (posix dirpath, dirnames, filenames) for easy comparison."""
+    return [(_normalize_smb_path(dirpath), dirnames, filenames) for dirpath, dirnames, filenames in result]
+
+
+@pytest.fixture
+def simple_tree(fake_scandir):
+    return fake_scandir(
+        {
+            _ROOT: [_file("a.txt"), _dir("sub"), _dir("empty")],
+            f"{_ROOT}/sub": [_file("b.txt"), _dir("deep")],
+            f"{_ROOT}/sub/deep": [_file("c.txt")],
+            f"{_ROOT}/empty": [],
+        }
+    )
+
+
+@pytestmark_walk
+def test_walk_top_down(simple_tree):  # noqa ARG001
+    assert _names(_walk()) == [
+        (_ROOT, ["sub", "empty"], ["a.txt"]),
+        (f"{_ROOT}/sub", ["deep"], ["b.txt"]),
+        (f"{_ROOT}/sub/deep", [], ["c.txt"]),
+        (f"{_ROOT}/empty", [], []),
+    ]
+
+
+@pytestmark_walk
+def test_walk_yields_smb_paths(simple_tree):  # noqa ARG001
+    for dirpath, _, _ in _walk():
+        assert isinstance(dirpath, SmbPath)
+
+
+@pytestmark_walk
+def test_walk_bottom_up(simple_tree):  # noqa ARG001
+    assert _names(_walk(top_down=False)) == [
+        (f"{_ROOT}/sub/deep", [], ["c.txt"]),
+        (f"{_ROOT}/sub", ["deep"], ["b.txt"]),
+        (f"{_ROOT}/empty", [], []),
+        (_ROOT, ["sub", "empty"], ["a.txt"]),
+    ]
+
+
+@pytestmark_walk
+def test_walk_top_down_pruning(simple_tree):  # noqa ARG001
+    visited = []
+    for dirpath, dirnames, _ in Path(_ROOT).walk():  # type: ignore[attr-defined]
+        visited.append(_normalize_smb_path(dirpath))
+        if dirnames == ["sub", "empty"]:
+            dirnames.remove("sub")
+
+    assert visited == [_ROOT, f"{_ROOT}/empty"]
+
+
+@pytestmark_walk
+def test_walk_bottom_up_pruning_has_no_effect(simple_tree):  # noqa ARG001
+    visited = []
+    for dirpath, dirnames, _ in Path(_ROOT).walk(top_down=False):  # type: ignore[attr-defined]
+        visited.append(_normalize_smb_path(dirpath))
+        dirnames.clear()
+
+    assert visited == [f"{_ROOT}/sub/deep", f"{_ROOT}/sub", f"{_ROOT}/empty", _ROOT]
+
+
+@pytestmark_walk
+def test_walk_is_lazy(simple_tree):
+    walker = Path(_ROOT).walk()
+
+    assert simple_tree == []
+
+    next(walker)
+
+    assert len(simple_tree) == 1
+
+
+@pytest.fixture
+def symlink_tree(fake_scandir):
+    return fake_scandir(
+        {
+            _ROOT: [_file("a.txt"), _link_dir("link")],
+            f"{_ROOT}/link": [_file("b.txt")],
+        }
+    )
+
+
+@pytestmark_walk
+def test_walk_symlink_dir_not_followed(symlink_tree):  # noqa ARG001
+    """Like pathlib (and unlike os.walk), a non followed symlink dir is a filename."""
+    assert _names(_walk()) == [(_ROOT, [], ["a.txt", "link"])]
+
+
+@pytestmark_walk
+def test_walk_symlink_dir_followed(symlink_tree):  # noqa ARG001
+    assert _names(_walk(follow_symlinks=True)) == [
+        (_ROOT, ["link"], ["a.txt"]),
+        (f"{_ROOT}/link", [], ["b.txt"]),
+    ]
+
+
+@pytest.fixture
+def error_tree(fake_scandir):
+    return fake_scandir(
+        {
+            _ROOT: [_dir("denied"), _dir("ok")],
+            f"{_ROOT}/denied": smb_exceptions.SMBOSError(ntstatus=0xC0000022, filename=f"{_ROOT}/denied"),
+            f"{_ROOT}/ok": [_file("a.txt")],
+        }
+    )
+
+
+@pytestmark_walk
+def test_walk_errors_ignored_by_default(error_tree):  # noqa ARG001
+    assert _names(_walk()) == [
+        (_ROOT, ["denied", "ok"], []),
+        (f"{_ROOT}/ok", [], ["a.txt"]),
+    ]
+
+
+@pytestmark_walk
+def test_walk_on_error_called(error_tree):  # noqa ARG001
+    errors = []
+
+    result = _walk(on_error=errors.append)
+
+    assert len(errors) == 1
+    assert isinstance(errors[0], OSError)
+    assert len(result) == 2
+
+
+@pytestmark_walk
+def test_walk_on_error_may_abort(error_tree):  # noqa ARG001
+    def reraise(error):
+        raise error
+
+    with pytest.raises(OSError):
+        _walk(on_error=reraise)
+
+
+@pytestmark_walk
+def test_walk_unlistable_root_yields_nothing(fake_scandir):
+    fake_scandir({_ROOT: smb_exceptions.SMBOSError(ntstatus=0xC0000034, filename=_ROOT)})
+
+    assert _walk() == []

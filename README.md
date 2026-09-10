@@ -44,6 +44,10 @@ Currently the following SMB dependent functions are implemented:
 - `rmdir`
 - `symlink_to`
 - `unlink`
+- `walk` (Python 3.12+, as `pathlib.Path.walk` itself)
+  - Supports in-place pruning of `dirnames`, `top_down`, `on_error` and `follow_symlinks`
+  - Symlinks are treated like `pathlib.Path.walk` does, **not** like `os.walk`: with
+    `follow_symlinks=False` a symlink pointing to a directory is reported in `filenames`
 
 Missing operations (throwing exception) with current version (and questionable whether all of them will come) are:
 

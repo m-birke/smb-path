@@ -97,7 +97,7 @@ def test_function_signatures(path_func, smb_path_func):
 
 @pytest.mark.skipif(sys.version_info < (3, 12), reason="Path.walk was added in Python 3.12")
 def test_walk_signature():
-    _assert_signatures_match(Path.walk, SmbPath.walk)
+    _assert_signatures_match(Path.walk, SmbPath.walk)  # type: ignore[attr-defined]
 
 
 @pytest.mark.parametrize(
@@ -182,7 +182,7 @@ def fake_scandir(monkeypatch):
 
 
 def _walk(root: str = _ROOT, **kwargs):
-    return list(Path(root).walk(**kwargs))
+    return list(Path(root).walk(**kwargs))  # type: ignore[attr-defined]
 
 
 def _names(result):
@@ -231,7 +231,7 @@ def test_walk_bottom_up(simple_tree):  # noqa ARG001
 @pytestmark_walk
 def test_walk_top_down_pruning(simple_tree):  # noqa ARG001
     visited = []
-    for dirpath, dirnames, _ in Path(_ROOT).walk():
+    for dirpath, dirnames, _ in Path(_ROOT).walk():  # type: ignore[attr-defined]
         visited.append(str(dirpath).replace("\\", "/"))
         if dirnames == ["sub", "empty"]:
             dirnames.remove("sub")
@@ -242,7 +242,7 @@ def test_walk_top_down_pruning(simple_tree):  # noqa ARG001
 @pytestmark_walk
 def test_walk_bottom_up_pruning_has_no_effect(simple_tree):  # noqa ARG001
     visited = []
-    for dirpath, dirnames, _ in Path(_ROOT).walk(top_down=False):
+    for dirpath, dirnames, _ in Path(_ROOT).walk(top_down=False):  # type: ignore[attr-defined]
         visited.append(str(dirpath).replace("\\", "/"))
         dirnames.clear()
 

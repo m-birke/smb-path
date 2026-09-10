@@ -4,6 +4,7 @@ import inspect
 import sys
 
 import pytest
+import smbclient
 
 from pathlib import Path
 from smb_path.smb_path import SmbPath
@@ -92,12 +93,24 @@ def test_smb_path_init_from_path():
     ids=["open", "stat", "iterdir", "mkdir", "rmdir", "unlink", "rename", "symlink", "replace", "resolve", "glob"],
 )
 def test_function_signatures(path_func, smb_path_func):
-    _assert_signatures_match(path_func, smb_path_func)
+    path_params = inspect.signature(path_func).parameters
+    smb_path_params = inspect.signature(smb_path_func).parameters
+
+    # Every Path parameter must appear in matching position with the same
+    # default. Any extra trailing SmbPath parameter must be VAR_KEYWORD.
+    assert len(smb_path_params) >= len(path_params)
+
+    for p_param, smbp_param in zip(path_params.values(), smb_path_params.values(), strict=False):
+        assert p_param.name == smbp_param.name
+        assert p_param.default == smbp_param.default
 
 
 @pytest.mark.skipif(sys.version_info < (3, 12), reason="Path.walk was added in Python 3.12")
 def test_walk_signature():
     _assert_signatures_match(Path.walk, SmbPath.walk)  # type: ignore[attr-defined]
+
+    for extra in list(smb_path_params.values())[len(path_params) :]:
+        assert extra.kind is inspect.Parameter.VAR_KEYWORD
 
 
 @pytest.mark.parametrize(
@@ -117,6 +130,27 @@ def test_not_implemented_functions(path_func, kwargs):
     with pytest.raises(NotImplementedError):
         func(**kwargs)
 
+
+def test_open_forwards_kwargs(monkeypatch):
+    captured = {}
+
+    def fake(_path, **kwargs):
+        captured.update(kwargs)
+        return object()
+
+    monkeypatch.setattr(smbclient, "open_file", fake)
+
+    SmbPath("//host/share/file.txt").open(mode="rb", share_access="r", username="alice")
+
+    assert captured == {
+        "mode": "rb",
+        "buffering": -1,
+        "encoding": None,
+        "errors": None,
+        "newline": None,
+        "share_access": "r",
+        "username": "alice",
+    }
 
 # ---------------------------------------------------------------------------
 # walk

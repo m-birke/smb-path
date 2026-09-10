@@ -18,9 +18,23 @@ class SmbPath(PurePath):
         encoding: str | None = None,
         errors: str | None = None,
         newline: str | None = None,
+        **kwargs: Any,
     ) -> TextIOWrapper:
+        """Open the file. All arguments are forwarded to smbclient.open_file.
+
+        :param kwargs: Notable extras include share_access ("r" allows
+            concurrent readers, "rw" also allows writers, default None opens
+            exclusively), desired_access, file_attributes and session
+            parameters such as username.
+        """
         return smbclient.open_file(
-            str(self), mode=mode, buffering=buffering, encoding=encoding, errors=errors, newline=newline
+            str(self),
+            mode=mode,
+            buffering=buffering,
+            encoding=encoding,
+            errors=errors,
+            newline=newline,
+            **kwargs,
         )
 
     def stat(self, *, follow_symlinks: bool = True) -> stat_result:

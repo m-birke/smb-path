@@ -127,6 +127,10 @@ pytestmark_walk = pytest.mark.skipif(sys.version_info < (3, 12), reason="Path.wa
 _ROOT = "//filshr33.us.evilcorp.com/myShare"
 
 
+def _normalize_smb_path(path) -> str:
+    return str(path).replace("\\", "/").rstrip("/")
+
+
 class _FakeDirEntry:
     """Minimal stand in for smbclient.SMBDirEntry."""
 
@@ -168,7 +172,7 @@ def fake_scandir(monkeypatch):
     def _install(tree: dict):
         def scandir(path, *args, **kwargs):  # noqa ARG001
             calls.append(path)
-            key = str(path).replace("\\", "/")
+            key = _normalize_smb_path(path)
             entries = tree[key]
             if isinstance(entries, Exception):
                 raise entries
@@ -187,7 +191,7 @@ def _walk(root: str = _ROOT, **kwargs):
 
 def _names(result):
     """Reduce walk output to (posix dirpath, dirnames, filenames) for easy comparison."""
-    return [(str(dirpath).replace("\\", "/"), dirnames, filenames) for dirpath, dirnames, filenames in result]
+    return [(_normalize_smb_path(dirpath), dirnames, filenames) for dirpath, dirnames, filenames in result]
 
 
 @pytest.fixture
@@ -232,7 +236,7 @@ def test_walk_bottom_up(simple_tree):  # noqa ARG001
 def test_walk_top_down_pruning(simple_tree):  # noqa ARG001
     visited = []
     for dirpath, dirnames, _ in Path(_ROOT).walk():  # type: ignore[attr-defined]
-        visited.append(str(dirpath).replace("\\", "/"))
+        visited.append(_normalize_smb_path(dirpath))
         if dirnames == ["sub", "empty"]:
             dirnames.remove("sub")
 
@@ -243,7 +247,7 @@ def test_walk_top_down_pruning(simple_tree):  # noqa ARG001
 def test_walk_bottom_up_pruning_has_no_effect(simple_tree):  # noqa ARG001
     visited = []
     for dirpath, dirnames, _ in Path(_ROOT).walk(top_down=False):  # type: ignore[attr-defined]
-        visited.append(str(dirpath).replace("\\", "/"))
+        visited.append(_normalize_smb_path(dirpath))
         dirnames.clear()
 
     assert visited == [f"{_ROOT}/sub/deep", f"{_ROOT}/sub", f"{_ROOT}/empty", _ROOT]

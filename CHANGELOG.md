@@ -1,5 +1,10 @@
 # `smb-path` Changelog
 
+## 0.8.0 (2026-09-10)
+
+- Implemented `walk`
+  - Only available for Python 3.12+
+
 ## 0.7.1 (2026-04-10)
 
 - Make the top level domain optional. This Enables local shares w/o tld
